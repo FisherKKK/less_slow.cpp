@@ -1870,6 +1870,8 @@ BENCHMARK_CAPTURE(theoretic_tops, u8_neon, tops_u8_neon_asm_kernel)->MinTime(10)
  *  There are 8 specialized @b TMM registers, most compilers don't even have
  *  working intrinsics for them, but even writing Assembly is not enough to
  *  use them - you need to instruct the Linux kernel to enable them.
+ * 
+ *  这里你需要使用system call告诉内核你需要使用Tile 
  */
 
 bool enable_amx() {
@@ -1888,6 +1890,11 @@ bool enable_amx() {
     return (bitmask & XFEATURE_MASK_XTILE) != 0;
 }
 
+/**
+ *  Configuration of AMX :
+ *      * config tilecnf: 1KB的register bf16 [16 * 32], int8 [16 * 64]
+ *      * set config
+ */
 void configure_amx() {
     if (!enable_amx()) throw std::runtime_error("AMX not enabled!");
 
